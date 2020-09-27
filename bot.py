@@ -8,7 +8,6 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 from handlers import (greet_user, talk_to_me, send_image, get_user_image)
 import settings
 
-
 logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO,
                     filename='bot.log'
@@ -29,7 +28,6 @@ def main():
     
     dp = mybot.dispatcher
     dp.add_handler(CommandHandler("start", greet_user))
-    #dp.add_handler(CommandHandler("image", send_image))
     dp.add_handler(MessageHandler(Filters.photo, get_user_image))
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
     logging.info("Бот стартовал")
