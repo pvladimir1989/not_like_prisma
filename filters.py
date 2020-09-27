@@ -12,11 +12,3 @@ def gray_filter(input_image_path, output_image_path, file_name):
         print('something wrong')
     cv2.imwrite(output_image_path, gray_image)
 
-
-if __name__ == "__main__":
-    gray_filter(
-'input/AgACAgIAAxkBAAIBl19w3r9Q5hAZ6qWR6gvMCdAs9AR_AAK7rzEbigABiEtz2aE2zLy4KN4M5JcuAAMBAAMCAAN5AAMCFwEAARsE.jpg',
-'output/AgACAgIAAxkBAAIBl19w3r9Q5hAZ6qWR6gvMCdAs9AR_AAK7rzEbigABiEtz2aE2zLy4KN4M5JcuAAMBAAMCAAN5AAMCFwEAARsE.jpg',
-'AgACAgIAAxkBAAIBl19w3r9Q5hAZ6qWR6gvMCdAs9AR_AAK7rzEbigABiEtz2aE2zLy4KN4M5JcuAAMBAAMCAAN5AAMCFwEAARsE.jpg'
-    )
-
