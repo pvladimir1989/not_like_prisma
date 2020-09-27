@@ -1,6 +1,6 @@
 venv
 bot.log
 settings.py
-download
 __pycache__
-images
+input
+output

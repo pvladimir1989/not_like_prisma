@@ -24,13 +24,20 @@ def get_user_image(update, context):
     chat_id = update.message.chat_id # получаем чат айди пользователя
 
     update.message.reply_text('Принимаю фото')
-    os.makedirs('download', exist_ok = True) #добавляется папка download
-    user_photo = context.bot.getFile(update.message.photo[0].file_id) # получаем фотографию от пользователя
-    file_path = os.path.join('download', f'{user_photo.file_id}.jpg') 
-    user_photo.download(file_path)
+    os.makedirs('input', exist_ok = True) #добавляется папка input
+    os.makedirs('output', exist_ok = True) #добавляется папка output
+    
+    user_photo = context.bot.getFile(update.message.photo[-1].file_id) # получаем фотографию от пользователя 
+    
+    input_image_path = os.path.join('input', f'{user_photo.file_id}.jpg') 
+    output_image_path = os.path.join('output', f'{user_photo.file_id}.jpg') 
+    
+    user_photo.download(input_image_path)
     update.message.reply_text('Фото сохранено')
-    gray_filter(image_path = f'{file_path}', file_name=f'{user_photo.file_id}.jpg')
+    
+    # вызываем функцию обработки изображения
+    gray_filter(input_image_path= f'{input_image_path}', output_image_path = f'{output_image_path}', file_name=f'{user_photo.file_id}.jpg')
     update.message.reply_text('Фото изменено')
-    context.bot.send_photo(chat_id = chat_id, photo = open(f'{user_photo.file_id}.jpg', 'rb'))
+    context.bot.send_photo(chat_id = chat_id, photo = open(f'{output_image_path}', 'rb'))
     
     
