@@ -43,4 +43,5 @@ def processing_user_photo(update, context):
     # отправка фото
     update.message.reply_text('отправляю фото')
     context.bot.send_photo(chat_id = chat_id, photo = open(output_image_path, 'rb'))
+    photo.close()
 
