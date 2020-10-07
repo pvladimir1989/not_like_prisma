@@ -36,7 +36,7 @@ def increase_brightness(image, value=300):
         print('something wrong')
     return img
 
-
+# blur
 def blur_filter(image):
     try:
         blur_image = cv2.blur(image, (9, 9), 0)
