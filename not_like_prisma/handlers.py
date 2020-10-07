@@ -42,6 +42,8 @@ def processing_user_photo(update, context):
     cv2.imwrite(output_image_path, edited_photo)
     # отправка фото
     update.message.reply_text('отправляю фото')
-    context.bot.send_photo(chat_id = chat_id, photo = open(output_image_path, 'rb'))
-    photo.close()
+    user_photo = open(output_image_path, 'rb')
+    context.bot.send_photo(chat_id = chat_id, photo = user_photo)
+    user_photo.close()
+
 
