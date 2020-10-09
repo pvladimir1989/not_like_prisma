@@ -9,21 +9,21 @@ class ImageFilters:
 
     def gray_filter(self):
         try:
-            gray_image = cv2.cvtColor(self, cv2.COLOR_BGR2GRAY)
+            gray_image = cv2.cvtColor(self.image, cv2.COLOR_BGR2GRAY)
         except Exception:
             print('something wrong')
         return gray_image
 
     def threshold_filter(self):
         try:
-            _, th1 = cv2.threshold(self, 127, 255, cv2.THRESH_TOZERO_INV)
+            _, th1 = cv2.threshold(self.image, 127, 255, cv2.THRESH_TOZERO_INV)
         except Exception:
             print('something wrong')
         return th1
 
     def increase_brightness(self, value=300):
         try:
-            hsv = cv2.cvtColor(self, cv2.COLOR_BGR2HSV)
+            hsv = cv2.cvtColor(self.image, cv2.COLOR_BGR2HSV)
             h, s, v = cv2.split(hsv)
             lim = 255 - value
             v[v > lim] = 255
@@ -36,21 +36,21 @@ class ImageFilters:
 
     def blur_filter(self):
         try:
-            blur_image = cv2.blur(self, (9, 9), 0)
+            blur_image = cv2.blur(self.image, (9, 9), 0)
         except Exception:
             print('something wrong')
         return blur_image
 
     def sobel_filter(self):
         try:
-            laplacian_image = cv2.Laplacian(self, cv2.CV_8U)
+            laplacian_image = cv2.Laplacian(self.image, cv2.CV_8U)
         except Exception:
             print('something wrong')
         return laplacian_image
 
     def sepia(self):
         try:
-            img = self
+            img = self.image
             img = np.array(img, dtype=np.float64)  # converting to float to prevent loss
             img = cv2.transform(img, np.matrix([[0.272, 0.534, 0.131],
                                                 [0.349, 0.686, 0.168],
@@ -63,7 +63,7 @@ class ImageFilters:
 
     def cartoon(self):
         try:
-            img = self
+            img = self.image
             edges1 = cv2.bitwise_not(cv2.Canny(img, 100, 200))  # for thin edges and inverting the mask obatined
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             gray = cv2.medianBlur(gray, 5)  # applying median blur with kernel size of 5
@@ -82,7 +82,7 @@ class ImageFilters:
 
     def pencil_scatch(self):
         try:
-            img = self
+            img = self.image
             dst_gray, dst_color = cv2.pencilSketch(img, sigma_s=60, sigma_r=0.07,
                                                    shade_factor=0.05)  # inbuilt function to generate pencil sketch in both color and grayscale
             # sigma_s controls the size of the neighborhood. Range 1 - 200

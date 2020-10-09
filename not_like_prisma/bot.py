@@ -2,9 +2,13 @@ import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
-from handlers import (greet_user, talk_to_me, processing_user_photo, start_image,get_image,send_filtered_photo)
+from handlers import (greet_user, talk_to_me, processing_user_photo, start_image, get_image, send_filtered_photo)
 
 import settings
+
+import os
+
+PORT = int(os.environ.get('PORT', 5000))
 
 logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO,
@@ -26,11 +30,17 @@ def main():
     dp.add_handler(CommandHandler("start", greet_user))
     dp.add_handler(MessageHandler(Filters.regex('^(Начнем обработку фотографии)$'), start_image))
     dp.add_handler(MessageHandler(Filters.photo, get_image))
-    dp.add_handler(MessageHandler(Filters.photo, send_filtered_photo))
+    dp.add_handler(MessageHandler(Filters.text, send_filtered_photo))
     # dp.add_handler(MessageHandler(Filters.photo, processing_user_photo))
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
     logging.info("Бот стартовал")
-    mybot.start_polling()
+    # mybot.start_polling()
+
+    mybot.start_webhook(listen="0.0.0.0",
+                        port=int(PORT),
+                        url_path=settings.API_KEY)
+    mybot.bot.setWebhook('https://git.heroku.com/glacial-coast-67738.git' + settings.API_KEY)
+
     mybot.idle()
 
 
