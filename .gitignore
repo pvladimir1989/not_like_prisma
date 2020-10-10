@@ -124,3 +124,8 @@ dmypy.json
 # working files
 input
 output
+
+Procfile
+
+# jetbrains
+.idea/*

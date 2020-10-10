@@ -9,3 +9,12 @@ PySocks==1.7.1
 python-telegram-bot==12.8
 six==1.15.0
 tornado==6.0.4
+
+pip~=20.1.1
+configparser~=3.8.1
+pytz~=2020.1
+uuid~=1.30
+setuptools~=47.1.0
+pandas~=1.1.2
+python-dateutil~=2.8.1
+colorama~=0.4.3

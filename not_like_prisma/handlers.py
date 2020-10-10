@@ -3,7 +3,6 @@ import os
 
 from telegram import ReplyKeyboardMarkup
 import cv2
-from filters import ImageFilters
 from keyboard import main_keyboard, greeting_text, filter_keyboard
 from telegram.ext import Filters
 from utils import make_folders, save_user_image, filter_user_image
