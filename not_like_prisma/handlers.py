@@ -3,9 +3,9 @@ import os
 
 from telegram import ReplyKeyboardMarkup
 import cv2
-from keyboard import main_keyboard, greeting_text, filter_keyboard
+from not_like_prisma.keyboard import main_keyboard, greeting_text, filter_keyboard
 from telegram.ext import Filters
-from utils import make_folders, save_user_image, filter_user_image
+from not_like_prisma.utils import make_folders, save_user_image, filter_user_image
 
 INPUT_PATH = None
 OUTPUT_PATH = None

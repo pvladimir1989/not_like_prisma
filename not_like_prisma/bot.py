@@ -2,9 +2,9 @@ import logging
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
-from handlers import (greet_user, talk_to_me, start_image, get_image, send_filtered_photo)
+from not_like_prisma.handlers import (greet_user, talk_to_me, start_image, get_image, send_filtered_photo)
 
-import settings
+import not_like_prisma.settings as settings
 
 import os
 

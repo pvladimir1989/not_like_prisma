@@ -1,5 +1,5 @@
 import os
-from filters import ImageFilters
+from not_like_prisma.filters import ImageFilters
 
 
 def make_folders():
