@@ -1,5 +1,15 @@
+import math
+
 import cv2
 from pandas import np
+from pywin.Demos import progressbar
+import progressbar
+
+import not_like_prisma.utils
+
+from not_like_prisma.vector_field import VectorField
+from not_like_prisma.color_palette import ColorPalette
+from not_like_prisma.color_math import color_select, randomized_grid, compute_color_probabilities
 
 
 class ImageFilters:
@@ -35,35 +45,64 @@ class ImageFilters:
 
     def sepia(self):
         img = self.image
-        img = np.array(img, dtype=np.float64)  # converting to float to prevent loss
+        img = np.array(img, dtype=np.float64)
         img = cv2.transform(img, np.matrix([[0.272, 0.534, 0.131],
                                             [0.349, 0.686, 0.168],
-                                            [0.393, 0.769, 0.189]]))  # multipying image with special sepia matrix
-        img[np.where(img > 255)] = 255  # normalizing values greater than 255 to 255
-        img = np.array(img, dtype=np.uint8)  # converting back to int
+                                            [0.393, 0.769, 0.189]]))
+        img[np.where(img > 255)] = 255
+        img = np.array(img, dtype=np.uint8)
         return img
 
     def cartoon(self):
         img = self.image
-        edges1 = cv2.bitwise_not(cv2.Canny(img, 100, 200))  # for thin edges and inverting the mask obatined
+        edges1 = cv2.bitwise_not(cv2.Canny(img, 100, 200))
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        gray = cv2.medianBlur(gray, 5)  # applying median blur with kernel size of 5
-        edges2 = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 7,
-                                       7)  # thick edges
+        gray = cv2.medianBlur(gray, 5)
+        edges2 = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 7, 7)
         dst = cv2.edgePreservingFilter(img, flags=2, sigma_s=64,
-                                       sigma_r=0.25)  # you can also use bilateral filter but that is slow
-        # flag = 1 for RECURS_FILTER (Recursive Filtering) and 2 for  NORMCONV_FILTER (Normalized Convolution). NORMCONV_FILTER produces sharpening of the edges but is slower.
-        # sigma_s controls the size of the neighborhood. Range 1 - 200
-        # sigma_r controls the how dissimilar colors within the neighborhood will be averaged. A larger sigma_r results in large regions of constant color. Range 0 - 1
-        cartoon1 = cv2.bitwise_and(dst, dst, mask=edges1)  # adding thin edges to smoothened image
-        cartoon2 = cv2.bitwise_and(dst, dst, mask=edges2)  # adding thick edges to smoothened image
+                                       sigma_r=0.25)
+        cartoon1 = cv2.bitwise_and(dst, dst, mask=edges1)
+        cartoon2 = cv2.bitwise_and(dst, dst, mask=edges2)
         return cartoon2
 
     def pencil_scatch(self):
         img = self.image
-        dst_gray, dst_color = cv2.pencilSketch(img, sigma_s=60, sigma_r=0.07,
-                                               shade_factor=0.05)  # inbuilt function to generate pencil sketch in both color and grayscale
-        # sigma_s controls the size of the neighborhood. Range 1 - 200
-        # sigma_r controls the how dissimilar colors within the neighborhood will be averaged. A larger sigma_r results in large regions of constant color. Range 0 - 1
-        # shade_factor is a simple scaling of the output image intensity. The higher the value, the brighter is the result. Range 0 - 0.1
+        dst_gray, dst_color = cv2.pencilSketch(img, sigma_s=60, sigma_r=0.07, shade_factor=0.05)
         return dst_color
+
+    def pointillism(self):
+        img = self.image
+        limit_image_size = 0
+        if limit_image_size > 0:
+            img = not_like_prisma.limit_size(img, limit_image_size)
+        stroke_scale = 0
+        if stroke_scale == 0:
+            stroke_scale = int(math.ceil(max(img.shape) / 1000))
+        else:
+            stroke_scale = stroke_scale
+        gradient_smoothing_radius = 0
+        if gradient_smoothing_radius == 0:
+            gradient_smoothing_radius = int(round(max(img.shape) / 50))
+        else:
+            gradient_smoothing_radius = gradient_smoothing_radius
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        palette_size = 20
+        palette = ColorPalette.from_image(img, palette_size)
+        palette = palette.extend([(0, 50, 0), (15, 30, 0), (-15, 30, 0)])
+        cv2.imshow("palette", palette.to_image())
+        cv2.waitKey(200)
+        gradient = VectorField.from_gradient(gray)
+        gradient.smooth(gradient_smoothing_radius)
+        res = cv2.medianBlur(img, 11)
+        grid = randomized_grid(img.shape[0], img.shape[1], scale=3)
+        batch_size = 10000
+        bar = progressbar.ProgressBar()
+        for h in bar(range(0, len(grid), batch_size)):
+            pixels = np.array([img[x[0], x[1]] for x in grid[h:min(h + batch_size, len(grid))]])
+            color_probabilities = compute_color_probabilities(pixels, palette, k=9)
+            for i, (y, x) in enumerate(grid[h:min(h + batch_size, len(grid))]):
+                color = color_select(color_probabilities[i], palette)
+                angle = math.degrees(gradient.direction(y, x)) + 90
+                length = int(round(stroke_scale + stroke_scale * math.sqrt(gradient.magnitude(y, x))))
+                cv2.ellipse(res, (x, y), (length, stroke_scale), angle, 0, 360, color, -1, cv2.LINE_AA)
+        return res

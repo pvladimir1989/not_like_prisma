@@ -129,3 +129,6 @@ Procfile
 
 # jetbrains
 .idea/*
+
+#строка для cmd
+for_cmd.txt

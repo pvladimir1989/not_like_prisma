@@ -5,7 +5,8 @@ main_keyboard = [
 greeting_text = 'Вас приветствует бот по обработке изображений!'
 
 filter_keyboard = [
-    ['gray_filter', 'threshold_filter', 'increase_brightness', 'blur_filter', 'sobel_filter', 'sepia', 'cartoon',
-     'pencil_scatch'],
+    ['Серый', 'Сегментирование', 'Увеличение яркости'],
+    ['Размытие', 'Фильтр Собеля', 'Сепия'],
+    ['Мультфильм', 'Карандаш', 'Пуантилизм'],
     ['/start']
 ]
