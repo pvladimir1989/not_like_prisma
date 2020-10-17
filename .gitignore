@@ -132,3 +132,4 @@ Procfile
 
 #строка для cmd
 for_cmd.txt
+settings.py
