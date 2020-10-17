@@ -1,49 +1,53 @@
-from glob import glob
-import os 
-
 from telegram import ReplyKeyboardMarkup
 import cv2
-from filters import gray_filter
-from keyboard import keyboard
-from utils import make_folders
+from not_like_prisma.keyboard import main_keyboard, greeting_text, filter_keyboard
+from telegram.ext import Filters
+from not_like_prisma.utils import make_folders, save_user_image, filter_user_image
 
 
 def greet_user(update, context):
     print('Вызван /start')
-    greet_keyboard = ReplyKeyboardMarkup(keyboard)
-    update.message.reply_text('Вызван /start', reply_markup = greet_keyboard)
+    greet_keyboard = ReplyKeyboardMarkup(main_keyboard, resize_keyboard=True)
+    update.message.reply_text(greeting_text, reply_markup=greet_keyboard)
+
 
 def talk_to_me(update, context):
     text = update.message.text
-    print (text)
+    print(text)
     update.message.reply_text(text)
 
 
-def save_user_image(user_photo):
-    make_folders()
-    input_image_path = os.path.join('input', f'{user_photo.file_id}.jpg')
-    output_image_path = os.path.join('output', f'{user_photo.file_id}.jpg')  
-    user_photo.download(input_image_path)
-    return input_image_path, output_image_path
+def get_image(update, context):
+    user_photo = context.bot.getFile(
+        update.message.photo[-1].file_id)  # получаем фотографию от пользователя
+    input_path, output_path = save_user_image(user_photo)
+    context.user_data["input"] = input_path
+    context.user_data["output"] = output_path
+    keyboard = ReplyKeyboardMarkup(filter_keyboard, resize_keyboard=True, row_width=2)
+    update.message.reply_text('Фото получено', reply_markup=keyboard)
 
-def filter_user_image(input_image_path):
-    edited_photo = gray_filter(input_image_path)
-    return edited_photo
 
-def processing_user_photo(update, context):
+def send_filtered_photo(update, context):
+    filters_dict = {'gray_filter': 'Серый', 'threshold_filter': 'Сегментирование',
+                    'increase_brightness': 'Увеличение яркости',
+                    'blur_filter': 'Размытие', 'sobel_filter': 'Фильтр Собеля', 'sepia': 'Сепия',
+                    'cartoon': 'Мультфильм',
+                    'pencil_scatch': 'Карандаш', 'pointillism': 'Пуантилизм'}
     chat_id = update.message.chat_id
-    user_photo = context.bot.getFile(update.message.photo[-1].file_id) # получаем фотографию от пользователя 
-    input_image_path, output_image_path = save_user_image(user_photo) # сохраняем фото и прописываем пути 
-    update.message.reply_text('принял фото')
-    # блок для обработки фото 
-    update.message.reply_text('обрабатываю фото')
-    image = cv2.imread(input_image_path)
-    edited_photo = filter_user_image(image)
-    cv2.imwrite(output_image_path, edited_photo)
-    # отправка фото
-    update.message.reply_text('отправляю фото')
-    user_photo = open(output_image_path, 'rb')
-    context.bot.send_photo(chat_id = chat_id, photo = user_photo)
+    filter_attribute = update.message.text
+    for keys, values in filters_dict.items():
+        if filter_attribute == values:
+            filter_attribute = keys
+    input_path = context.user_data.get('input')
+    output_path = context.user_data.get('output')
+    image = input_path
+    image = cv2.imread(input_path)
+    edited_photo = filter_user_image(image, filter_attribute)
+    cv2.imwrite(output_path, edited_photo)
+    user_photo = open(output_path, 'rb')
+    context.bot.send_photo(chat_id=chat_id, photo=user_photo)
     user_photo.close()
 
 
+def start_image(update, context):
+    update.message.reply_text("Загрузите фотографию для обработки")

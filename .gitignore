@@ -107,7 +107,7 @@ venv.bak/
 # Spyder project settings
 .spyderproject
 .spyproject
-
+settings.py
 # Rope project settings
 .ropeproject
 
@@ -124,4 +124,12 @@ dmypy.json
 # working files
 input
 output
+
+Procfile
+
+# jetbrains
+.idea/*
+
+#строка для cmd
+for_cmd.txt
 settings.py
