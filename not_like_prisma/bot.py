@@ -29,7 +29,6 @@ def main():
     dp.add_handler(MessageHandler(Filters.regex('^(Серый)$|^(Сегментирование)$|^(Увеличение яркости)$|^(Размытие)$|^('
                                                 'Фильтр Собеля)$|^(Сепия)$|^(Мультфильм)$|^(Карандаш)$|^(Пуантилизм)$'),
                                   send_filtered_photo))
-    # dp.add_handler(MessageHandler(Filters.text, send_filtered_photo))
     dp.add_handler(MessageHandler(Filters.text, talk_to_me))
     logging.info("Бот стартовал")
     my_bot.start_polling()

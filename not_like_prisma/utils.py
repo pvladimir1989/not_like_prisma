@@ -25,7 +25,6 @@ def filter_user_image(image, filter_attribute):
     return edited_photo()
 
 
-# from kernel
 def limit_size(img, max_x, max_y=0):
     if max_x == 0:
         return img
