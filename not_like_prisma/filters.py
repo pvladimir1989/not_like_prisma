@@ -1,9 +1,10 @@
 import math
 
 import cv2
-from pandas import np
-from pywin.Demos import progressbar
-import progressbar
+import numpy as np
+# пока убрал в комменты эти библиотеки
+# from pywin.Demos import progressbar
+# import progressbar
 
 import not_like_prisma.utils
 
