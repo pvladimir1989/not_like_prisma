@@ -1,7 +1,7 @@
 import os
 
 import cv2
-from pandas import np
+import numpy as np
 
 from not_like_prisma.filters import ImageFilters
 

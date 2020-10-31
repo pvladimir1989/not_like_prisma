@@ -113,7 +113,6 @@ settings.py
 
 # mkdocs documentation
 /site
-
 # mypy
 .mypy_cache/
 .dmypy.json
@@ -133,3 +132,5 @@ Procfile
 #строка для cmd
 for_cmd.txt
 settings.py
+# vscode
+.vscode
