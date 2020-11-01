@@ -3,8 +3,9 @@ import os
 import cv2
 import numpy as np
 
-from not_like_prisma.filters import ImageFilters
-
+# from not_like_prisma.filters import ImageFilters
+# from not_like_prisma import ImageFilters
+import not_like_prisma
 
 def make_folders():
     os.makedirs('input', exist_ok=True)  # добавляется папка input
@@ -20,7 +21,7 @@ def save_user_image(user_photo):
 
 
 def filter_user_image(image, filter_attribute):
-    filter = ImageFilters(image)
+    filter = not_like_prisma.ImageFilters(image)
     edited_photo = getattr(filter, filter_attribute)
     return edited_photo()
 
