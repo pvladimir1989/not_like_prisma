@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 # пока убрал в комменты эти библиотеки
 # from pywin.Demos import progressbar
-# import progressbar
+import progressbar
 
 import not_like_prisma.utils
 
@@ -90,8 +90,8 @@ class ImageFilters:
         palette_size = 20
         palette = ColorPalette.from_image(img, palette_size)
         palette = palette.extend([(0, 50, 0), (15, 30, 0), (-15, 30, 0)])
-        cv2.imshow("palette", palette.to_image())
-        cv2.waitKey(200)
+        # cv2.imshow("palette", palette.to_image())
+        # cv2.waitKey(200)
         gradient = VectorField.from_gradient(gray)
         gradient.smooth(gradient_smoothing_radius)
         res = cv2.medianBlur(img, 11)
