@@ -3,7 +3,7 @@ cffi==1.14.3
 cryptography==3.1.1
 decorator==4.4.2
 numpy==1.19.2
-opencv-python==4.4.0.44
+opencv-python==4.1.2.30
 pycparser==2.20
 PySocks==1.7.1
 python-telegram-bot==12.8
@@ -28,3 +28,4 @@ scikit-learn~=0.23.2
 future~=0.18.2
 joblib~=0.17.0
 threadpoolctl~=2.1.0
+progressbar

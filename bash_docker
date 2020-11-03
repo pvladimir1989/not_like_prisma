@@ -1,0 +1,20 @@
+sudo docker build -t not_like_prisma .
+sudo docker run -p 5000:5000 -it not_like_prisma
+sudo docker ls
+sudo docker images
+sudo docker image ls | grep not_like_prisma
+
+sudo docker-compose -f ./docker-compose.yml build
+sudo docker-compose -f ./docker-compose.yml up
+sudo docker exec -it not_like_prisma bash
+sudo docker ps
+sudo docker run not_like_prisma -it bash
+
+git clone --branch flask_template https://github.com/pvladimir1989/not_like_prisma.git
+
+#виртуальное окружение
+python3 -m venv env
+source env/bin/activate
+export FLASK_APP=not_like_prisma && export FLASK_ENV=development && export PYTHONPATH=$PYTHONPATH:/home/vladimir/PycharmProjects/not_like_prisma && flask run
+export PYTHONPATH=$PYTHONPATH:/home/vladimir/PycharmProjects/not_like_prisma
+export FLASK_APP=not_like_prisma && export FLASK_ENV=development && export PYTHONPATH=$PYTHONPATH:~/PycharmProjects/not_like_prisma && flask run
