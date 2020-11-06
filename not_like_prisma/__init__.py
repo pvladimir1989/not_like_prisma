@@ -19,21 +19,15 @@ def create_app():
     def allowed_file(filename):
         return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-    # @app.route('/', methods=['GET', 'POST'])
     def what_filter(filename):
         image = cv2.imread(os.path.join(app.config['UPLOAD_FOLDER'], filename))
         filter = ImageFilters(image).increase_brightness()
         cv2.imwrite(os.path.join(app.config['UPLOAD_FOLDER'], filename), filter)
         return redirect(url_for('uploaded_file', filename=filename))
 
-    # return render_template('index.html')
-
     @app.route('/', methods=['GET', 'POST'])
     def upload_file():
         if request.method == 'POST':
-            # check if the post request has the file part
-            # if request.form.get('gray') == 'gray':
-            # what_filter()
             if 'file' not in request.files:
                 flash('No file part')
                 return redirect(request.url)
